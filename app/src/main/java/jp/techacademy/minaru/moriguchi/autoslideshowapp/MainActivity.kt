@@ -33,7 +33,9 @@ class MainActivity : AppCompatActivity() {
         } else {
             getContentsInfo()
         }
-
+        next_button.setOnClickListener{
+            cursor.moveToNext()
+        }
 
 
     }
