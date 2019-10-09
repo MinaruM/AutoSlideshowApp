@@ -85,7 +85,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         start_button.setOnClickListener{
-            if (mTimer ==null){
+            back_button.setEnabled(false)
+            next_button.setEnabled(false)
+            start_button.text="停止"
+            if (mTimer ==null) {
                 mTimer = Timer()
                 mTimer!!.schedule(object: TimerTask(){
                     override fun run() {
@@ -99,6 +102,14 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }, 2000,2000)
+            }else{
+                back_button.setEnabled(true)
+                next_button.setEnabled(true)
+                start_button.text="再生"
+                mTimer!!.cancel()
+                mTimer = null
+
+
             }
         }
     }
