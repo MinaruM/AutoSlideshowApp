@@ -9,8 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
-import android.view.View
-import jp.techacademy.minaru.moriguchi.autoslideshowapp.R.id.start_button
+import android.support.v7.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -18,7 +17,6 @@ class MainActivity : AppCompatActivity() {
 
     private val PERMISSIONS_REQUEST_CODE = 100
     private var mTimer: Timer? = null
-    private var mTimerSec = 0
     private var mHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +45,36 @@ class MainActivity : AppCompatActivity() {
             PERMISSIONS_REQUEST_CODE ->
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getContentsInfo()
+                }else{
+                    showAlertDialog()
                 }
         }
+    }
+
+    private fun showAlertDialog() {
+        // AlertDialog.Builderクラスを使ってAlertDialogの準備をする
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setMessage("許可が必要です")
+
+        // 肯定ボタンに表示される文字列、押したときのリスナーを設定する
+        alertDialogBuilder.setPositiveButton("OK") { dialog, which ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // パーミッションの許可状態を確認する
+                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    // 許可されている
+                    getContentsInfo()
+                } else {
+                    // 許可されていないので許可ダイアログを表示する
+                    requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSIONS_REQUEST_CODE)
+                }
+                // Android 5系以下の場合
+            } else {
+                getContentsInfo()
+            }
+        }
+        // AlertDialogを作成して表示する
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 
     private fun getContentsInfo() {
