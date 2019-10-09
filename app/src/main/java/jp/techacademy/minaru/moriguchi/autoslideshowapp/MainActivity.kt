@@ -64,14 +64,14 @@ class MainActivity : AppCompatActivity() {
 
             imageView.setImageURI(imageUri)
         }
-        cursor.close()
 
-        next_button.setOnClickListener{
+        next_button.setOnClickListener {
             cursor.moveToNext()
         }
+        back_button.setOnClickListener {
+            cursor.moveToPrevious()
+
+        }
+
     }
-
-
-
-
 }
